@@ -6,7 +6,7 @@ from django.core.mail import send_mail
 
 
 
-class User(AbstractBaseUser):
+class Users(AbstractBaseUser):
     email: models.EmailField = models.EmailField(_('email address'), unique=True)
     first_name: models.CharField = models.CharField(_('first name'), max_length=30, blank=True)
     last_name: models.CharField = models.CharField(_('last name'), max_length=30, blank=True)
@@ -15,11 +15,16 @@ class User(AbstractBaseUser):
     account_balance: models.DecimalField = models.DecimalField(max_digits=10,decimal_places=2, default=0.0)
     
     objects = UserManager() 
+    REQUIRED_FIELDS = [
+        'email'
+    ]
     
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []
-    
-        
+    class Meta:
+        verbose_name = _('user')
+        verbose_name_plural = _('users')
+        abstract = True 
+        # USERNAME_FIELD = 'email'
+        # REQUIRED_FIELDS = []
         
     def get_full_name(self):
         '''
@@ -40,7 +45,6 @@ class User(AbstractBaseUser):
         '''
         send_mail(subject, message, from_email, [self.email], **kwargs)
         
-    class Meta:
-        abstract = True  
+     
         # verbose = _('user')
         # verbose_name_plural = _('users')

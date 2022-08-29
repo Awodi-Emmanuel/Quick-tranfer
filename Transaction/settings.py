@@ -31,7 +31,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
+# AUTH_USER_MODEL = "core.User"
 # Application definition
 
 INSTALLED_APPS = [
@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     'drf_yasg',
     'rest_framework_simplejwt',
 ]
+
+# AUTH_USER_MODEL = "core.Users"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -134,15 +136,14 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
-    ),
+    "DEFAULT_PAGINATION_CLASS": "core.pagination.MetadataPagination",
+    "PAGE_SIZE": 100,
     'DEFAULT_AUTHENTICATION_CLASSES': (
-    'rest_framework.authentication.SessionAuthentication',
-    'rest_framework.authentication.BasicAuthentication',
-    'rest_framework_simplejwt.authentication.JWTAuthentication', 
-    ),
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+  
 }
 
 

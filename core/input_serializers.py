@@ -13,7 +13,7 @@ class RegisterSerializer(Serializer):
     first_name = CharField()
     last_name = CharField()
     email = EmailField()
-    
+    username = CharField()
     class Meta:
         ref_name = None
     
