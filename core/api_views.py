@@ -53,7 +53,7 @@ class RegisterViewset(YkGenericViewSet):
                 user.save()
                 
                 # return CreatedResponse({"message": "user created"})
-                return GoodResponse()
+                return CreatedResponse({"message": "user created"})
             
         except Exception as e:
             logger.error(traceback.print_exc())
