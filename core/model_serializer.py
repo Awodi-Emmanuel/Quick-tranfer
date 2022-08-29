@@ -8,10 +8,17 @@ from rest_framework.serializers import CharField, IntegerField, ListSerializer
 User = get_user_model()
 
 
-class ModelSerializer(ModelSerializer):
+class UserSerializer(ModelSerializer):
     id = IntegerField()
     
     class Meta:
         model = User
-        fields = ("id", "email", "first_name", "last_name", "date_joined", "is_active", "account_balance")
+        fields = ("id", "username", "email", "first_name", "last_name", "date_joined", "is_active", "account_balance")
+        
+        
+class BalanceSerializer(ModelSerializer):
+    
+    class Meta:
+        model = User
+        fields = ("id", "first_name", "last_name", "account_balance") 
     

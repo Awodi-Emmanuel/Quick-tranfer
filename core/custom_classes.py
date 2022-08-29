@@ -3,7 +3,7 @@ from rest_framework.viewsets import GenericViewSet
 from core.errors import BadRequestError, NotFoundError
 from core.responses import BadRequestResponse
 
-class YKGenericViewSet(GenericViewSet):
+class YkGenericViewSet(GenericViewSet):
     def dispatch(self, request, *args, **kwargs):
         try:
             return super().dispatch(request, *args, **kwargs)

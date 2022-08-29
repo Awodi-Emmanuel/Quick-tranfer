@@ -1,4 +1,4 @@
-from .abstration import User as AbstractUser
+from .abstration import Users as AbstractUser
 
 
 

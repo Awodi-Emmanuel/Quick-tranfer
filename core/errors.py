@@ -1,4 +1,4 @@
-from core.responses import BadRequestResponse, NotFoundRespones
+from core.responses import BadRequestResponse, NotFoundResponse
 
 class BadRequestError(Exception):
     def __init__(self, message, code, request, *args, **kwargs):
