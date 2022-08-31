@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'drf_yasg',
     'rest_framework_simplejwt',
+    'wallet'
 ]
 
 # AUTH_USER_MODEL = "core.Users"

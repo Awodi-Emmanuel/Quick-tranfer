@@ -20,5 +20,5 @@ class BalanceSerializer(ModelSerializer):
     
     class Meta:
         model = User
-        fields = ("id", "first_name", "last_name", "account_balance") 
+        fields = ("account_balance") 
     

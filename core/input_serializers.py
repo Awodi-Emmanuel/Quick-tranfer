@@ -18,3 +18,9 @@ class RegisterSerializer(Serializer):
         ref_name = None
     
     
+class TranserSerializer(Serializer):
+    account_balance = CharField()
+    username = CharField()
+    
+    class Meta:
+        ref_name = None
