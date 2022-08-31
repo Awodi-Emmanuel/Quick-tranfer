@@ -22,6 +22,7 @@ schema_view = get_schema_view(
 urlpatterns = [
    path("docs/", schema_view.with_ui("swagger", cache_timeout=0), name="docs-ui"),
    path("v1/", include(("core.urls", "core"))),
+   path('v1', include(('wallet.urls', 'wallet')))
    #  path("v1/", include(("monitoring.urls", "monitoring"))),
    
 ]
