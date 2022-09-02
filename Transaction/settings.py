@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'drf_yasg',
     'rest_framework_simplejwt',
-    'wallet'
+    'wallet',
+    'rest_framework.authtoken'
 ]
 
 # AUTH_USER_MODEL = "core.Users"
@@ -138,15 +139,31 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
+# REST_FRAMEWORK = {
+    
+#     'DEFAULT_AUTHENTICATION_CLASSES': (
+#         'rest_framework_simplejwt.authentication.JWTAuthentication',
+#         'rest_framework.authentication.SessionAuthentication',
+#         # 'rest_framework.authentication.TokenAuthentication',
+#     ),
+    
+#     'DEFAULT_PERMISSION_CLASSES': (
+#     'rest_framework.permissions.IsAuthenticated',
+    
+#     )
+  
+# }
 REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "core.pagination.MetadataPagination",
     "PAGE_SIZE": 100,
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
-  
+    'rest_framework.authentication.SessionAuthentication',
+    'rest_framework.authentication.TokenAuthentication',
+),
+    'DEFAULT_PERMISSION_CLASSES': (
+    'rest_framework.permissions.IsAuthenticated',
+)
 }
-
 
 LOGS_DIR = os.path.join(BASE_DIR, "logs")
 
