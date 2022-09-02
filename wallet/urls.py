@@ -1,18 +1,18 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from .api_views import (
-    RegisterViewset,
-    BalanceViewset,
-    # TransferViewset
-    )
+# from .api_views import (
+#     RegisterViewset,
+#     BalanceViewset,
+#     # TransferViewset
+#     )
 
 
 router = DefaultRouter()
 # router.register("manage-tranfer", BalanceViewset, basename="balance-api")
 # router.register('tranfer', TransferViewset, basename='transfer')
-router.register('register', RegisterViewset, basename='rigster')
-router.register('manage-tranfer', BalanceViewset, basename='transfer')
+# router.register('register', RegisterViewset, basename='rigster')
+# router.register('manage-tranfer', BalanceViewset, basename='transfer')
 
 
 

@@ -14,8 +14,10 @@ from rest_framework.viewsets import ViewSet, ModelViewSet, GenericViewSet
 from core.input_serializers import RegisterSerializer 
 from core.model_serializer import (
     BalanceSerializer,
-    UserSerializer
+    UserSerializer,
+    SigninInputSerializer
 )
+
 from .responses_serialisers import (
     EmptySerializer,
     NotFoundResponseSerializer,
@@ -84,3 +86,21 @@ class BalanceViewset(YkGenericViewSet):
         transf_ser = BalanceSerializer(data=self.request.data)
         print(transf_ser)    
             
+            
+class LoginViewset(YkGenericViewSet):
+    @swagger_auto_schema(
+        operation_summary="login",
+        operation_description="login",
+        responses={200: EmptySerializer(), 400: BadRequestResponseSerializer()},
+        request_body=SigninInputSerializer(),
+        
+    )
+    
+    @action(methods=["POST"],  detail=False)
+    
+    def post(self, request, *args, **kwags):
+        rcv_ser = SigninInputSerializer(data=self.request.data)
+        
+        if rcv_ser.is_valid():
+            print(rcv_ser)
+    

@@ -24,3 +24,21 @@ class TranserSerializer(Serializer):
     
     class Meta:
         ref_name = None
+        
+class SigninInputSerializer(Serializer):
+    email = EmailField(required=False, allow_null=True)
+    username = CharField(required=False, allow_null=True)
+    password = CharField()
+
+    class Meta:
+        ref_name = None
+
+    def validate_password(self, *args):
+        username = self.initial_data.get("username")
+        email = self.initial_data.get("email")
+        password = self.initial_data.get("password")
+
+        if not email and not username:
+            raise ValidationError(_("(username or email) fields should be present."))
+
+        return password
