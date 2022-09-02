@@ -14,8 +14,9 @@ from rest_framework.viewsets import ViewSet, ModelViewSet, GenericViewSet
 from core.input_serializers import RegisterSerializer 
 from core.model_serializer import (
     BalanceSerializer,
-    UserSerializer
+    UserSerializer,
 )
+from .input_serializers import SigninInputSerializer
 from .responses_serialisers import (
     EmptySerializer,
     NotFoundResponseSerializer,
@@ -32,6 +33,7 @@ from rest_framework import permissions
 from rest_framework.decorators import action
 from drf_yasg.utils import swagger_auto_schema
 from django.contrib.auth import get_user_model 
+from rest_framework.authtoken.models import Token
 
 logger = logging.getLogger()
 User = get_user_model()
@@ -45,7 +47,7 @@ class RegisterViewset(YkGenericViewSet):
         request_body=RegisterSerializer(),
     )
     
-    @action(methods=["POST"], detail=False)
+    @action(methods=["POST"], detail=False, authentication_classes = (), permission_classes = ())
     
     def signup(self, request, *args, **kwargs):
         try:
@@ -56,6 +58,7 @@ class RegisterViewset(YkGenericViewSet):
                 user = User.objects.create(**rcv_ser.validated_data)
                 user.set_password(password)
                 user.save()
+                Token.objects.create(user=user)
                 
                 return GoodResponse(rcv_ser.data)
                 #return CreatedResponse({"message": "user created"})
@@ -84,3 +87,21 @@ class BalanceViewset(YkGenericViewSet):
         transf_ser = BalanceSerializer(data=self.request.data)
         print(transf_ser)    
             
+            
+class LoginViewset(YkGenericViewSet):
+    @swagger_auto_schema(
+        operation_summary="login",
+        operation_description="login",
+        responses={200: EmptySerializer(), 400: BadRequestResponseSerializer()},
+        request_body=SigninInputSerializer(),
+        
+    )
+    
+    @action(methods=["POST"],  detail=False)
+    
+    def post(self, request, *args, **kwags):
+        rcv_ser = SigninInputSerializer(data=self.request.data)
+        
+        if rcv_ser.is_valid():
+            print(rcv_ser)
+    
