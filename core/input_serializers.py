@@ -14,8 +14,43 @@ class RegisterSerializer(Serializer):
     last_name = CharField()
     email = EmailField()
     username = CharField()
+    password = CharField()
+    
     class Meta:
         ref_name = None
+        
+        
+    
+    def validate_username(self, *args):
+        username = self.initial_data["username"]
+        u = User.objects.filter(username=username).first()
+        if u: 
+        #and u.date_joined >= datetime(2020, 1, 1, tzinfo=pytz.UTC):
+            raise ValidationError("Username is already used.")
+        return username
+
+    def validate_email(self, *args):
+        email = self.initial_data["email"]
+        try:
+            dj_validate_email(email)
+            user = User.objects.filter(email=email).first()
+            if user: 
+            # and user.date_joined >= datetime(2020, 1, 1, tzinfo=pytz.UTC):
+                raise ValidationError("This email already used")
+        except ValidationError as e:
+            raise e
+
+        return email
+
+    # def create_user(self):
+    #     username = self.validated_data["username"]
+    #     email = self.validated_data["email"]
+    #     first_name = self.validated_data["first_name"]
+    #     last_name = self.validated_data["last_name"]
+    #     password = self.validated_data["password"]
+
+    #     user = User.objects.filter(email=email).first()
+    #     return user
     
     
 class TranserSerializer(Serializer):
@@ -35,10 +70,10 @@ class SigninInputSerializer(Serializer):
 
     def validate_password(self, *args):
         username = self.initial_data.get("username")
-        email = self.initial_data.get("email")
+        # email = self.initial_data.get("email")
         password = self.initial_data.get("password")
 
-        if not email and not username:
-            raise ValidationError(_("(username or email) fields should be present."))
+        if  not username:
+            raise ValidationError(_("(username) fields should be present."))
 
         return password
