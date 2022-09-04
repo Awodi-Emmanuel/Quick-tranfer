@@ -212,3 +212,5 @@ LOGGING = {
         },
     },
 }
+
+PAYSTACK_SECRET_KEY = ''
