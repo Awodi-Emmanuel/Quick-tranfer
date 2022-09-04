@@ -30,7 +30,8 @@ from core.responses import (
 
 from rest_framework.decorators import action
 from drf_yasg.utils import swagger_auto_schema
-from django.contrib.auth import get_user_model 
+# from django.contrib.auth import get_user_model 
+from django.contrib.auth.models import User
 
 
 from rest_framework import status
@@ -39,18 +40,20 @@ from .model_serializer import WalletSerializer, DepositSerializer
 from .models.implementation import Wallet, WalletTransaction
 
 logger = logging.getLogger()
-User = get_user_model()
+# User = get_user_model()
 
 class WalletViewset(YkGenericViewSet):
     
     def get_queryset(self):
+        print(User)
         return User.objects.filter(email=self.request.user)
     
     @swagger_auto_schema(
         operation_summary="Wallet",
         operation_description="Transfer any amount",
         responses={200: EmptySerializer(), 400: BadRequestResponseSerializer()},
-        # request_body=WalletSerializer(),
+        # request_body=WalletSerializer(),clear
+        
     )
     
     @action(methods=["GET"], detail=False, url_path="wallet")
@@ -80,7 +83,41 @@ class WalletViewset(YkGenericViewSet):
     @action(methods=["POST"], detail=False,)
     
     def deposit(self, request, *args, **kwargs):
-        rcv_ser = DepositSerializer(data=self.request.data)
-        if rcv_ser.is_valid(raise_exception=True):
-            print(rcv_ser) 
+        try:
+            rcv_ser = DepositSerializer(data=self.request.data, context={"request": request})
+            if rcv_ser.is_valid(raise_exception=True):
+                resp = rcv_ser.save()
+                
+                return GoodResponse(resp)
+        except Exception as e:
+            return BadRequestResponse(str(e), "Unknown", request=self.request)    
+        
+        
+    @swagger_auto_schema(
+        operation_summary="Verify",
+        operation_description="Verify Deposit",
+        responses={200: EmptySerializer(), 400: BadRequestResponseSerializer()},
+    )
+    @action(methods=["GET"], detail=False, url_path="verify/<str:reference>")
+    def verify(self, request, *args, **kwargs):
+        transaction = WalletTransaction.objects.get(
+            paystack_payment_reference=reference, wallet__user=request.user)
+        reference = transaction.paystack_payment_reference
+        url = 'https://api.paystack.co/transaction/verify/{}'.format(reference)
+        headers = {"authourization": f"Bearer {settings.PAYSTACK_SECRET_KEY}"}
+        
+        r = request.get(url, headers=headers)
+        resp = r.json()
+        if resp["data"]["status"] == "success":
+            status = resp["data"]["status"]
+            amount = resp["data"]["amount"]
+            WalletTransaction.objects.filter(
+                paystack_payment_reference=reference
+            ).update(status=status, amount=amount)
+            
+            return GoodResponse(resp)
+        
+        GoodResponse(resp)
+        
+        
            
