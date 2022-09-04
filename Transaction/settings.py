@@ -213,4 +213,4 @@ LOGGING = {
     },
 }
 
-PAYSTACK_SECRET_KEY = ''
+PAYSTACK_SECRET_KEY = "sk_test_dc7fc2fd68cae43e98647cd1e9fbe0f1ef105a60" 
